@@ -13,14 +13,12 @@ public class StunClien5389UDPTest
 
 	private static readonly IPEndPoint Any = new(IPAddress.Any, 0);
 
-	private const string Server = "stun.hot-chilli.net";
-
 	[Test]
 	public async Task BindingTestSuccessAsync(CancellationToken cancellationToken)
 	{
 		Skip.When(TestEnvironment.IsCI, "Skipped on CI");
 
-		IPAddress ip = await _dnsClient.QueryAsync(Server, cancellationToken);
+		IPAddress ip = await _dnsClient.QueryAsync(TestEnvironment.StunServerHost, cancellationToken);
 		await using StunClient5389UDP client = new(new IPEndPoint(ip, StunServer.DefaultPort), Any);
 
 		StunResult5389 response = await client.BindingTestAsync(cancellationToken);

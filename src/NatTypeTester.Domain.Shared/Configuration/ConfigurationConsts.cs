@@ -14,8 +14,8 @@ public static class ConfigurationConsts
 
 	public static readonly ImmutableArray<string> DefaultStunServers =
 	[
-		"stun.hot-chilli.net",
 		"stun.fitauto.ru",
+		"stun.voipgate.com",
 		"stun.internetcalls.com",
 		"stun.voip.aebc.com",
 		"stun.voipbuster.com",

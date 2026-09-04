@@ -3,11 +3,21 @@
     <OutputType>WinExe</OutputType>
     <AssemblyName>NatTypeTester</AssemblyName>
     <ApplicationIcon>..\NatTypeTester.Views\Assets\icon.ico</ApplicationIcon>
+    <PublishAot>true</PublishAot>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(PublishTrimmed)' == 'true'">
+    <NoWarn>$(NoWarn);$(ReactiveUITrimNoWarn)</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(PublishAot)' == 'true'">
+    <NoWarn>$(NoWarn);IL3051;IL3053</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Avalonia.Desktop" />
-    <PackageReference Include="ChsBuffer.Avalonia.AppHost" Condition="'$(PublishAot)' != 'true'" />
+    <PackageReference Include="StaticLink.Avalonia" />
+    <PackageReference Include="StaticLink.Avalonia.Native" />
   </ItemGroup>
 
   <ItemGroup>
@@ -16,7 +26,6 @@
 
   <Target Name="ExcludeFilesFromPublish" AfterTargets="ComputeResolvedFilesToPublishList">
     <ItemGroup>
-      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.RelativePath)' == 'av_libglesv2.dll'" />
       <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="'%(Extension)' == '.pdb'" />
     </ItemGroup>
   </Target>

@@ -10,7 +10,7 @@ public class MainWindowViewModel : ViewModelBase
 
 	public SettingsViewModel SettingsViewModel => AppLocator.Current.GetRequiredService<SettingsViewModel>();
 
-	public async Task RunStartupTasksAsync()
+	public void RunStartupTasks()
 	{
 		if (_startupTasksStarted)
 		{
@@ -18,12 +18,16 @@ public class MainWindowViewModel : ViewModelBase
 		}
 
 		_startupTasksStarted = true;
+		Forget(RunStartupTasksAsync);
+	}
 
+	private async Task RunStartupTasksAsync(CancellationToken cancellationToken)
+	{
 		IAppConfigManager configManager = AppLocator.Current.GetRequiredService<IAppConfigManager>();
-		AppConfig config = await configManager.GetAsync();
+		AppConfig config = await configManager.GetAsync(cancellationToken);
 		SettingsViewModel settingsViewModel = SettingsViewModel;
 
 		settingsViewModel.ApplyConfig(config);
-		Forget(cancellationToken => settingsViewModel.Update.CheckForUpdateOnStartupAsync(config, cancellationToken));
+		await settingsViewModel.Update.CheckForUpdateOnStartupAsync(config, cancellationToken);
 	}
 }

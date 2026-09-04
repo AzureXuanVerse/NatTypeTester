@@ -141,13 +141,13 @@ public partial class StunServerSettingsViewModel : ViewModelBase
 	{
 		PersistToConfig
 		(
-			this.WhenAnyValue(static viewModel => viewModel.CurrentStunServer),
+			this.WhenChanged(static viewModel => viewModel.CurrentStunServer),
 			static (appConfig, value) => appConfig.CurrentStunServer = value
 		);
 
 		PersistToConfig
 		(
-			this.WhenAnyValue(static viewModel => viewModel.StunServers)
+			this.WhenChanged(static viewModel => viewModel.StunServers)
 				.Map
 				(static servers => servers.ObserveCollectionChanges()
 					.MapWith(servers, static (currentServers, _) => currentServers)
@@ -160,7 +160,7 @@ public partial class StunServerSettingsViewModel : ViewModelBase
 
 		PersistToConfig
 		(
-			this.WhenAnyValue(static viewModel => viewModel.StunServerListUri),
+			this.WhenChanged(static viewModel => viewModel.StunServerListUri!),
 			static (appConfig, value) => appConfig.StunServerListUri = value
 		);
 	}

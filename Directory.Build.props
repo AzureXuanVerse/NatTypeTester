@@ -7,14 +7,15 @@
     <Nullable>enable</Nullable>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <ILLinkTreatWarningsAsErrors>false</ILLinkTreatWarningsAsErrors>
     <Authors>HMBSbige</Authors>
   </PropertyGroup>
 
   <PropertyGroup>
     <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
     <EnableSingleFileAnalyzer>true</EnableSingleFileAnalyzer>
-    <!--     <IsAotCompatible>true</IsAotCompatible> -->
+    <IsAotCompatible>true</IsAotCompatible>
+    <!-- Upstream warnings from ReactiveUI and ReactiveUI.Binding. -->
+    <ReactiveUITrimNoWarn>IL2026;IL2046;IL2104</ReactiveUITrimNoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -25,11 +26,15 @@
     <!--    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>-->
     <PublishTrimmed>true</PublishTrimmed>
     <PublishReferencesDocumentationFiles>false</PublishReferencesDocumentationFiles>
-    <!--    <PublishAot>true</PublishAot>-->
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="MinVer" PrivateAssets="all" />
+  </ItemGroup>
+
+  <!-- ReactiveUI.Binding exposes unrelated analyzer packages to consumers. -->
+  <ItemGroup>
+    <PrunePackageReference Include="Blazor.Common.Analyzers;Roslynator.Analyzers;SonarAnalyzer.CSharp" Version="114514.1919.810" />
   </ItemGroup>
 
   <Target Name="CleanPreviousPublish" BeforeTargets="PrepareForPublish" Condition="'$(AndroidApplication)' != 'true'">
@@ -40,10 +45,6 @@
     <DebuggerSupport>false</DebuggerSupport>
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(PublishTrimmed)' == 'true'">
-    <NoWarn>$(NoWarn);IL2026;IL2104</NoWarn>
   </PropertyGroup>
 
 </Project>

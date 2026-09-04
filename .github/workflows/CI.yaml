@@ -47,19 +47,25 @@ jobs:
       - run: dotnet test --project tests/UnitTest/UnitTest.csproj -c Release
 
   build:
-    name: Build ${{ matrix.project }} (${{ matrix.rid }})
+    name: Build ${{ matrix.project }} (${{ matrix.target.rid }})
     needs: [test, check_format]
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.target.os }}
     strategy:
       matrix:
         project:
           - Desktop
           - Console
-        rid:
-          - win-x64
-          - linux-x64
-          - linux-arm64
-          - osx-arm64
+        target:
+          - os: windows-latest
+            rid: win-x64
+          - os: windows-11-arm
+            rid: win-arm64
+          - os: ubuntu-latest
+            rid: linux-x64
+          - os: ubuntu-26.04-arm
+            rid: linux-arm64
+          - os: macos-latest
+            rid: osx-arm64
     steps:
       - uses: actions/checkout@v7
         with:
@@ -71,13 +77,13 @@ jobs:
 
       - name: Build
         working-directory: src/${{ env.ProjectName }}.${{ matrix.project }}
-        run: dotnet publish -r ${{ matrix.rid }}
+        run: dotnet publish -r ${{ matrix.target.rid }}
 
       - name: Upload
         uses: actions/upload-artifact@v7
         with:
-          name: ${{ env.ProjectName }}.${{ matrix.project }}-${{ matrix.rid }}
-          path: artifacts/publish/${{ env.ProjectName }}.${{ matrix.project }}/release_${{ matrix.rid }}/
+          name: ${{ env.ProjectName }}.${{ matrix.project }}-${{ matrix.target.rid }}
+          path: artifacts/publish/${{ env.ProjectName }}.${{ matrix.project }}/release_${{ matrix.target.rid }}/
           if-no-files-found: error
 
   build_android:
@@ -243,8 +249,9 @@ jobs:
       - name: Package
         run: |
           mkdir -p builtfiles
-          for rid in win-x64 linux-x64 linux-arm64 osx-arm64; do
-            7z a -mx9 "builtfiles/${{ env.ProjectName }}-${{ github.ref_name }}-${rid}.7z" "${{ env.ProjectName }}.Desktop-${rid}"
+          for desktop_artifact in "${{ env.ProjectName }}".Desktop-*; do
+            rid="${desktop_artifact#*.Desktop-}"
+            7z a -mx9 "builtfiles/${{ env.ProjectName }}-${{ github.ref_name }}-${rid}.7z" "$desktop_artifact"
             7z a -mx9 "builtfiles/${{ env.ProjectName }}.Console-${{ github.ref_name }}-${rid}.7z" "${{ env.ProjectName }}.Console-${rid}"
           done
           for variant in android-arm64 android-x64 android-universal; do

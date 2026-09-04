@@ -39,13 +39,17 @@ public sealed partial class UpdateSettingsViewModel : ViewModelBase
 
 		PersistToConfig
 		(
-			this.WhenAnyValue
+			this.WhenChanged
 			(
 				static viewModel => viewModel.AutoCheckUpdate,
 				static viewModel => viewModel.CheckUpdateIntervalHours,
 				static viewModel => viewModel.IncludePreRelease,
 				static (autoCheckUpdate, checkUpdateIntervalHours, includePreRelease) =>
-					new UpdateConfigSnapshot(autoCheckUpdate, TimeSpan.FromHours(checkUpdateIntervalHours), includePreRelease)
+					(
+						AutoCheckUpdate: autoCheckUpdate,
+						CheckUpdateInterval: TimeSpan.FromHours(checkUpdateIntervalHours),
+						IncludePreRelease: includePreRelease
+					)
 			),
 			static (appConfig, value) =>
 			{
@@ -132,10 +136,4 @@ public sealed partial class UpdateSettingsViewModel : ViewModelBase
 		ILauncherService launcherService = AppLocator.Current.GetRequiredService<ILauncherService>();
 		await launcherService.LaunchUriAsync(new Uri(NatTypeTesterConsts.HomepageUrl));
 	}
-
-	private readonly record struct UpdateConfigSnapshot(
-		bool AutoCheckUpdate,
-		TimeSpan CheckUpdateInterval,
-		bool IncludePreRelease
-	);
 }

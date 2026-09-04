@@ -15,14 +15,12 @@ public class StunClient5389TCPTest
 	private static readonly IPEndPoint Any = new(IPAddress.Any, 0);
 	private static readonly HttpClient HttpClient = new();
 
-	private const string Server = "stun.hot-chilli.net";
-
 	[Test]
 	public async Task BindingTestSuccessAsync(CancellationToken cancellationToken)
 	{
 		Skip.When(TestEnvironment.IsCI, "Skipped on CI");
 
-		IPAddress ip = await _dnsClient.QueryAsync(Server, cancellationToken);
+		IPAddress ip = await _dnsClient.QueryAsync(TestEnvironment.StunServerHost, cancellationToken);
 		using IStunClient5389 client = new StunClient5389TCP(new IPEndPoint(ip, StunServer.DefaultPort), Any);
 
 		StunResult5389 response = await client.BindingTestAsync(cancellationToken);
@@ -56,11 +54,11 @@ public class StunClient5389TCPTest
 	{
 		Skip.When(TestEnvironment.IsCI, "Skipped on CI");
 
-		await Assert.That(StunServer.TryParse(Server, out StunServer? stunServer, StunServer.DefaultTlsPort)).IsTrue();
+		await Assert.That(StunServer.TryParse(TestEnvironment.StunServerHost, out StunServer? stunServer, StunServer.DefaultTlsPort)).IsTrue();
 		await Assert.That(stunServer).IsNotNull();
 		IPAddress ip = await _dnsClient.QueryAsync(stunServer.Hostname, cancellationToken);
 		ITcpProxy tls = new TlsProxy(stunServer.Hostname);
-		using IStunClient5389 client = new StunClient5389TCP(new IPEndPoint(ip, StunServer.DefaultPort), Any, tls);
+		using IStunClient5389 client = new StunClient5389TCP(new IPEndPoint(ip, stunServer.Port), Any, tls);
 
 		StunResult5389 response = await client.BindingTestAsync(cancellationToken);
 

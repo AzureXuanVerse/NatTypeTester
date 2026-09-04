@@ -3,16 +3,16 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="Avalonia.Android" Version="12.1.1" />
-    <PackageVersion Include="Avalonia.Desktop" Version="12.1.1" />
-    <PackageVersion Include="Avalonia.Themes.Fluent" Version="12.1.1" />
-    <PackageVersion Include="FluentIcons.Avalonia" Version="2.1.333" />
+    <PackageVersion Include="Avalonia.Android" Version="12.1.2" />
+    <PackageVersion Include="Avalonia.Desktop" Version="12.1.2" />
+    <PackageVersion Include="Avalonia.Themes.Fluent" Version="12.1.2" />
+    <PackageVersion Include="FluentIcons.Avalonia" Version="2.1.339.1" />
+    <PackageVersion Include="StaticLink.Avalonia" Version="4.150.1-7922.1" />
+    <PackageVersion Include="StaticLink.Avalonia.Native" Version="12.1.2.1" />
   </ItemGroup>
   <ItemGroup>
-    <PackageVersion Include="ChsBuffer.Avalonia.AppHost" Version="12.0.0-preview.6" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageVersion Include="ReactiveUI" Version="24.1.0" />
+    <PackageVersion Include="ReactiveUI" Version="24.2.0" />
+    <PackageVersion Include="ReactiveUI.Binding" Version="4.1.0" />
     <PackageVersion Include="ReactiveUI.Avalonia.Microsoft.Extensions.DependencyInjection" Version="12.1.1" />
     <PackageVersion Include="ReactiveUI.SourceGenerators" Version="3.2.0" />
     <PackageVersion Include="Splat.Serilog" Version="21.0.0" />
@@ -24,23 +24,23 @@
     <PackageVersion Include="Serilog.Sinks.Debug" Version="3.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <PackageVersion Include="dotnetCampus.SourceLocalizations" Version="0.1.1-alpha.5" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.10" />
-    <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.10" />
-    <PackageVersion Include="Microsoft.Extensions.Options" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.11" />
+    <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.11" />
+    <PackageVersion Include="Microsoft.Extensions.Options" Version="10.0.11" />
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="DTLS" Version="0.4.1" />
     <PackageVersion Include="Dns.Net" Version="0.3.0" />
+    <PackageVersion Include="dotnetCampus.SourceLocalizations" Version="0.1.1-alpha.5" />
     <PackageVersion Include="HMBSbige.UpdateChecker" Version="11.0.0" />
     <PackageVersion Include="MinVer" Version="7.0.0" />
-    <PackageVersion Include="NuGet.Versioning" Version="7.6.0" />
+    <PackageVersion Include="NuGet.Versioning" Version="7.9.0" />
     <PackageVersion Include="Socks5" Version="1.1.0" />
     <PackageVersion Include="Spectre.Console" Version="0.57.2" />
-    <PackageVersion Include="System.CommandLine" Version="2.0.10" />
-    <PackageVersion Include="ThisAssembly.AssemblyInfo" Version="2.1.2" />
+    <PackageVersion Include="System.CommandLine" Version="2.0.11" />
+    <PackageVersion Include="ThisAssembly.AssemblyInfo" Version="2.1.5" />
   </ItemGroup>
   <ItemGroup>
-    <PackageVersion Include="TUnit" Version="1.63.0" />
+    <PackageVersion Include="TUnit" Version="1.66.0" />
   </ItemGroup>
 </Project>

@@ -34,9 +34,9 @@ public class App : Avalonia.Application
 		base.OnFrameworkInitializationCompleted();
 	}
 
-	private static async void ScheduleStartupTasks(IServiceProvider serviceProvider)
+	private static void ScheduleStartupTasks(IServiceProvider serviceProvider)
 	{
 		MainWindowViewModel mainViewModel = serviceProvider.GetRequiredService<MainWindowViewModel>();
-		await Dispatcher.UIThread.InvokeAsync(mainViewModel.RunStartupTasksAsync, DispatcherPriority.Loaded);
+		Dispatcher.UIThread.Post(mainViewModel.RunStartupTasks, DispatcherPriority.Loaded);
 	}
 }

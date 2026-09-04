@@ -34,23 +34,23 @@ public sealed partial class ConnectionSettingsViewModel : ViewModelBase
 
 		PersistToConfig
 		(
-			this.WhenAnyValue
+			this.WhenChanged
 			(
 				static viewModel => viewModel.ProxyType,
-				static viewModel => viewModel.ProxyServer,
-				static viewModel => viewModel.ProxyUser,
-				static viewModel => viewModel.ProxyPassword,
-				static viewModel => viewModel.SkipCertificateValidation,
-				static (proxyType, proxyServer, proxyUser, proxyPassword, skipCertificateValidation) =>
-					new ConnectionConfigSnapshot(proxyType, proxyServer, proxyUser, proxyPassword, skipCertificateValidation)
+				static viewModel => viewModel.ProxyServer!,
+				static viewModel => viewModel.ProxyUser!,
+				static viewModel => viewModel.ProxyPassword!,
+				static viewModel => viewModel.SkipCertificateValidation
 			),
 			static (appConfig, value) =>
 			{
-				appConfig.ProxyType = value.ProxyType;
-				appConfig.ProxyServer = value.ProxyServer;
-				appConfig.ProxyUser = value.ProxyUser;
-				appConfig.ProxyPassword = value.ProxyPassword;
-				appConfig.SkipCertificateValidation = value.SkipCertificateValidation;
+				(
+					appConfig.ProxyType,
+					appConfig.ProxyServer,
+					appConfig.ProxyUser,
+					appConfig.ProxyPassword,
+					appConfig.SkipCertificateValidation
+				) = value;
 			}
 		);
 
@@ -67,13 +67,4 @@ public sealed partial class ConnectionSettingsViewModel : ViewModelBase
 			Password = ProxyPassword
 		};
 	}
-
-	private readonly record struct ConnectionConfigSnapshot
-	(
-		ProxyType ProxyType,
-		string? ProxyServer,
-		string? ProxyUser,
-		string? ProxyPassword,
-		bool SkipCertificateValidation
-	);
 }
