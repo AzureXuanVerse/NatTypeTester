@@ -51,6 +51,7 @@ jobs:
     needs: [test, check_format]
     runs-on: ${{ matrix.target.os }}
     strategy:
+      fail-fast: false
       matrix:
         project:
           - Desktop
@@ -74,6 +75,12 @@ jobs:
       - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: ${{ env.NET_VERSION }}
+
+      - name: Install Linux dependencies
+        if: runner.os == 'Linux' && matrix.project == 'Desktop'
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends libfontconfig-dev
 
       - name: Build
         working-directory: src/${{ env.ProjectName }}.${{ matrix.project }}
