@@ -15,10 +15,12 @@ public static class ConfigurationConsts
 	public static readonly ImmutableArray<string> DefaultStunServers =
 	[
 		"stun.fitauto.ru",
+		"stun.m-online.net",
+		"stun.mixvoip.com",
 		"stun.voipgate.com",
-		"stun.internetcalls.com",
-		"stun.voip.aebc.com",
-		"stun.voipbuster.com",
-		"stun.voipstunt.com"
+		"stun.t-online.de",
+		"stun.srce.hr",
+		"stun.aa.net.uk",
+		"stun.miwifi.com"
 	];
 }
