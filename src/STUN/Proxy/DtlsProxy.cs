@@ -35,15 +35,11 @@ public class DtlsProxy(IUdpProxy innerProxy, string serverName, bool skipCertifi
 			{
 				ServerName = serverName,
 				RemoteCertificateValidation = skipCertificateValidation
-					? static (_, chain, _) =>
-					{
-						CertificateChainDisposer.DisposeContents(chain);
-						return true;
-					}
-				: default
+					? static (_, _, _) => true
+					: default
 			};
 
-			_dtlsTransport = await DtlsTransport.CreateClientAsync(datagram, options);
+			_dtlsTransport = await DtlsTransport.CreateClientAsync(datagram, options, cancellationToken);
 			await _dtlsTransport.HandshakeAsync(cancellationToken);
 		}
 

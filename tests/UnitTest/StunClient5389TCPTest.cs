@@ -13,7 +13,6 @@ public class StunClient5389TCPTest
 	private readonly DefaultAClient _dnsClient = new();
 
 	private static readonly IPEndPoint Any = new(IPAddress.Any, 0);
-	private static readonly HttpClient HttpClient = new();
 
 	[Test]
 	public async Task BindingTestSuccessAsync(CancellationToken cancellationToken)
@@ -72,13 +71,10 @@ public class StunClient5389TCPTest
 
 	[Test]
 	[Explicit]
-	public async Task TestServerAsync(CancellationToken cancellationToken)
+	[ClassDataSource<StunServerList>(Shared = SharedType.PerClass)]
+	public async Task TestServerAsync(StunServerList serverList, CancellationToken cancellationToken)
 	{
-		const string url = @"https://raw.githubusercontent.com/pradt2/always-online-stun/master/valid_hosts_tcp.txt";
-		string listRaw = await HttpClient.GetStringAsync(url, cancellationToken);
-		string[] list = listRaw.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-
-		foreach (string host in list)
+		foreach (string host in serverList.Hosts)
 		{
 			try
 			{
@@ -106,13 +102,10 @@ public class StunClient5389TCPTest
 
 	[Test]
 	[Explicit]
-	public async Task TestTlsServerAsync(CancellationToken cancellationToken)
+	[ClassDataSource<StunServerList>(Shared = SharedType.PerClass)]
+	public async Task TestTlsServerAsync(StunServerList serverList, CancellationToken cancellationToken)
 	{
-		const string url = @"https://raw.githubusercontent.com/pradt2/always-online-stun/master/valid_hosts_tcp.txt";
-		string listRaw = await HttpClient.GetStringAsync(url, cancellationToken);
-		string[] list = listRaw.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-
-		foreach (string host in list)
+		foreach (string host in serverList.Hosts)
 		{
 			try
 			{

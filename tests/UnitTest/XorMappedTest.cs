@@ -1,6 +1,7 @@
 using STUN.Enums;
 using STUN.Messages.StunAttributeValues;
 using System.Net;
+using TUnit.Assertions.Enums;
 
 namespace UnitTest;
 
@@ -40,8 +41,8 @@ public class XorMappedTest
 		byte[] temp = new byte[ushort.MaxValue];
 
 		int length4 = t.WriteTo(temp);
-		await Assert.That(length4).IsNotEqualTo(0);
-		await Assert.That(temp.AsSpan(0, length4).SequenceEqual(_ipv4Response)).IsTrue();
+		await Assert.That(length4).IsEqualTo(_ipv4Response.Length);
+		await Assert.That(temp.AsMemory(0, length4)).IsEquivalentTo(_ipv4Response, EqualityComparer<byte>.Default, CollectionOrdering.Matching);
 
 		t = new XorMappedAddressStunAttributeValue(MagicCookieAndTransactionId);
 		await Assert.That(t.TryParse(_ipv4Response)).IsTrue();
@@ -56,7 +57,7 @@ public class XorMappedTest
 		await Assert.That(t.Address).IsEqualTo(_ipv6);
 
 		int length6 = t.WriteTo(temp);
-		await Assert.That(length6).IsNotEqualTo(0);
-		await Assert.That(temp.AsSpan(0, length6).SequenceEqual(_ipv6Response)).IsTrue();
+		await Assert.That(length6).IsEqualTo(_ipv6Response.Length);
+		await Assert.That(temp.AsMemory(0, length6)).IsEquivalentTo(_ipv6Response, EqualityComparer<byte>.Default, CollectionOrdering.Matching);
 	}
 }
