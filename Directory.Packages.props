@@ -12,8 +12,8 @@
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="ReactiveUI" Version="24.2.0" />
-    <PackageVersion Include="ReactiveUI.Binding" Version="4.1.0" />
-    <PackageVersion Include="ReactiveUI.Avalonia.Microsoft.Extensions.DependencyInjection" Version="12.1.1" />
+    <PackageVersion Include="ReactiveUI.Binding" Version="5.0.0" />
+    <PackageVersion Include="ReactiveUI.Avalonia.Microsoft.Extensions.DependencyInjection" Version="12.1.2" />
     <PackageVersion Include="ReactiveUI.SourceGenerators" Version="3.2.0" />
     <PackageVersion Include="Splat.Serilog" Version="21.0.0" />
   </ItemGroup>
@@ -42,6 +42,6 @@
     <PackageVersion Include="ThisAssembly.AssemblyInfo" Version="2.1.5" />
   </ItemGroup>
   <ItemGroup>
-    <PackageVersion Include="TUnit" Version="1.66.16" />
+    <PackageVersion Include="TUnit" Version="1.66.27" />
   </ItemGroup>
 </Project>
