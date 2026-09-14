@@ -30,11 +30,6 @@
     <PackageReference Include="MinVer" PrivateAssets="all" />
   </ItemGroup>
 
-  <!-- ReactiveUI.Binding exposes unrelated analyzer packages to consumers. -->
-  <ItemGroup>
-    <PrunePackageReference Include="Blazor.Common.Analyzers;Roslynator.Analyzers;SonarAnalyzer.CSharp" Version="114514.1919.810" />
-  </ItemGroup>
-
   <Target Name="CleanPreviousPublish" BeforeTargets="PrepareForPublish" Condition="'$(AndroidApplication)' != 'true'">
     <RemoveDir Directories="$(PublishDir)" />
   </Target>
