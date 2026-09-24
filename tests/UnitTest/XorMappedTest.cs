@@ -15,49 +15,43 @@ public class XorMappedTest
 		0xfa, 0x87, 0xdf, 0xae
 	];
 
-	private static readonly byte[] XorPort = [0xa1, 0x47];
-	private static readonly byte[] XorIPv4 = [0xe1, 0x12, 0xa6, 0x43];
-	private static readonly byte[] XorIPv6 = [0x01, 0x13, 0xa9, 0xfa, 0xa5, 0xd3, 0xf1, 0x79, 0xbc, 0x25, 0xf4, 0xb5, 0xbe, 0xd2, 0xb9, 0xd9];
-
 	private const ushort Port = 32853;
-	private readonly IPAddress _ipv4 = IPAddress.Parse(@"192.0.2.1");
-	private readonly IPAddress _ipv6 = IPAddress.Parse(@"2001:db8:1234:5678:11:2233:4455:6677");
-
-	private readonly byte[] _ipv4Response = ((byte[])[0x00, (byte)IpFamily.IPv4]).Concat(XorPort).Concat(XorIPv4).ToArray();
-	private readonly byte[] _ipv6Response = ((byte[])[0x00, (byte)IpFamily.IPv6]).Concat(XorPort).Concat(XorIPv6).ToArray();
 
 	/// <summary>
 	/// https://datatracker.ietf.org/doc/html/rfc5769
 	/// </summary>
 	[Test]
-	public async Task TestXorMapped()
+	[Arguments(IpFamily.IPv4, "192.0.2.1", "0001A147E112A643")]
+	[Arguments(IpFamily.IPv6, "2001:db8:1234:5678:11:2233:4455:6677", "0002A1470113A9FAA5D3F179BC25F4B5BED2B9D9")]
+	public async Task TestXorMapped(IpFamily family, string address, string encoded)
 	{
-		XorMappedAddressStunAttributeValue t = new(MagicCookieAndTransactionId)
+		IPAddress expectedAddress = IPAddress.Parse(address);
+		byte[] expectedBytes = Convert.FromHexString(encoded);
+		XorMappedAddressStunAttributeValue value = new(MagicCookieAndTransactionId)
 		{
 			Port = Port,
-			Family = IpFamily.IPv4,
-			Address = _ipv4
+			Family = family,
+			Address = expectedAddress
 		};
-		byte[] temp = new byte[ushort.MaxValue];
+		byte[] buffer = new byte[expectedBytes.Length];
 
-		int length4 = t.WriteTo(temp);
-		await Assert.That(length4).IsEqualTo(_ipv4Response.Length);
-		await Assert.That(temp.AsMemory(0, length4)).IsEquivalentTo(_ipv4Response, EqualityComparer<byte>.Default, CollectionOrdering.Matching);
+		int length = value.WriteTo(buffer);
+		await Assert.That(length).IsEqualTo(expectedBytes.Length);
+		await Assert.That(buffer.AsMemory(0, length)).IsEquivalentTo(expectedBytes, EqualityComparer<byte>.Default, CollectionOrdering.Matching);
 
-		t = new XorMappedAddressStunAttributeValue(MagicCookieAndTransactionId);
-		await Assert.That(t.TryParse(_ipv4Response)).IsTrue();
-		await Assert.That(t.Port).IsEqualTo(Port);
-		await Assert.That(t.Family).IsEqualTo(IpFamily.IPv4);
-		await Assert.That(t.Address).IsEqualTo(_ipv4);
+		value = new XorMappedAddressStunAttributeValue(MagicCookieAndTransactionId);
+		await Assert.That(value.TryParse(expectedBytes)).IsTrue();
 
-		t = new XorMappedAddressStunAttributeValue(MagicCookieAndTransactionId);
-		await Assert.That(t.TryParse(_ipv6Response)).IsTrue();
-		await Assert.That(t.Port).IsEqualTo(Port);
-		await Assert.That(t.Family).IsEqualTo(IpFamily.IPv6);
-		await Assert.That(t.Address).IsEqualTo(_ipv6);
+		using (Assert.Multiple())
+		{
+			await Assert.That(value.Port).IsEqualTo(Port);
+			await Assert.That(value.Family).IsEqualTo(family);
+			await Assert.That(value.Address).IsEqualTo(expectedAddress);
+		}
 
-		int length6 = t.WriteTo(temp);
-		await Assert.That(length6).IsEqualTo(_ipv6Response.Length);
-		await Assert.That(temp.AsMemory(0, length6)).IsEquivalentTo(_ipv6Response, EqualityComparer<byte>.Default, CollectionOrdering.Matching);
+		buffer.AsSpan().Clear();
+		int roundTripLength = value.WriteTo(buffer);
+		await Assert.That(roundTripLength).IsEqualTo(expectedBytes.Length);
+		await Assert.That(buffer.AsMemory(0, roundTripLength)).IsEquivalentTo(expectedBytes, EqualityComparer<byte>.Default, CollectionOrdering.Matching);
 	}
 }

@@ -44,6 +44,17 @@ public class HostnameEndpointTest
 	}
 
 	[Test]
+	[Arguments("stun.example.com", (ushort)5349)]
+	[Arguments("stun.example.com:3478", (ushort)3478)]
+	public async Task TestTlsDefaultPort(string str, ushort expectedPort)
+	{
+		await Assert.That(StunServer.TryParse(str, out StunServer? server, StunServer.DefaultTlsPort)).IsTrue();
+		await Assert.That(server).IsNotNull();
+		await Assert.That(server.Hostname).IsEqualTo("stun.example.com");
+		await Assert.That(server.Port).IsEqualTo(expectedPort);
+	}
+
+	[Test]
 	[Arguments(@"stun.syncthing.net:114", @"stun.syncthing.net:114")]
 	[Arguments(@"stun.syncthing.net:3478", @"stun.syncthing.net")]
 	[Arguments(@"[2001:db8:1234:5678:11:2233:4455:6677]", @"[2001:db8:1234:5678:11:2233:4455:6677]")]

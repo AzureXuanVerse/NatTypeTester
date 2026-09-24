@@ -37,7 +37,7 @@ public sealed partial class ApplicationSettingsViewModel : ViewModelBase
 
 		foreach (string cultureName in NatTypeTesterLanguage.SupportedLanguageTags)
 		{
-			CultureInfo cultureInfo = new(cultureName);
+			CultureInfo cultureInfo = CultureInfo.GetCultureInfo(cultureName);
 			Languages.Add(new LanguageOptionViewModel(cultureInfo.Name, cultureInfo.NativeName));
 		}
 
